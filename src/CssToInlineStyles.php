@@ -21,6 +21,9 @@ class CssToInlineStyles
     /** @var bool */
     private $isHtml5Document = false;
 
+    /** @var int */
+    private $libXmlOptions = 0;
+
     /**
      * @param bool|null $useHtml5Parser Whether to use a HTML5 parser or the native DOM parser
      */
@@ -37,6 +40,19 @@ class CssToInlineStyles
 
             $this->html5Parser = new HTML5(['disable_html_ns' => true]);
         }
+    }
+
+    /**
+     * Set DOMDocument LibXML parameters.
+     *
+     * @param int $options
+     * @return self
+     */
+    public function setLibXmlOptions($options)
+    {
+        $this->libXmlOptions = $options;
+
+        return $this;
     }
 
     /**
@@ -158,7 +174,7 @@ class CssToInlineStyles
     {
         $document = new \DOMDocument('1.0', 'UTF-8');
         $internalErrors = libxml_use_internal_errors(true);
-        $document->loadHTML($this->convertToHtmlEntities($html));
+        $document->loadHTML($this->convertToHtmlEntities($html), $this->libXmlOptions);
         libxml_use_internal_errors($internalErrors);
         $document->formatOutput = true;
 
