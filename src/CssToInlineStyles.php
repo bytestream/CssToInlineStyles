@@ -13,6 +13,7 @@ use TijsVerkoyen\CssToInlineStyles\Css\Rule\Processor as RuleProcessor;
 
 class CssToInlineStyles
 {
+    /** @var CssSelectorConverter */
     private $cssConverter;
 
     /** @var HTML5|null */
@@ -233,12 +234,15 @@ class CssToInlineStyles
         // retrieve the document element
         // we do it this way to preserve the utf-8 encoding
         $htmlElement = $document->documentElement;
-        $html = $parser->saveHTML($htmlElement);
+        $html = $parser->saveHTML($htmlElement) ?: '';
         $html = trim($html);
+        if ($htmlElement === null) {
+            return $html;
+        }
 
         // retrieve the doctype
         $document->removeChild($htmlElement);
-        $doctype = $document->saveHTML();
+        $doctype = $document->saveHTML() ?: '';
         $doctype = trim($doctype);
 
         // if it is the html5 doctype convert it to lowercase
@@ -261,6 +265,7 @@ class CssToInlineStyles
             return $document;
         }
 
+        /** @var \SplObjectStorage<\DOMElement, Css\Property\Property[]> $propertyStorage */
         $propertyStorage = new \SplObjectStorage();
 
         $xPath = new \DOMXPath($document);
@@ -325,8 +330,10 @@ class CssToInlineStyles
 
                 //overrule if current property is important and existing is not, else check specificity
                 $overrule = !$existingProperty->isImportant() && $property->isImportant();
-                if (!$overrule) {
-                    $overrule = $existingProperty->getOriginalSpecificity()->compareTo($property->getOriginalSpecificity()) <= 0;
+                $originalSpecificity = $existingProperty->getOriginalSpecificity();
+                $specificity = $property->getOriginalSpecificity();
+                if (!$overrule && $originalSpecificity !== null && $specificity !== null) {
+                    $overrule = $originalSpecificity->compareTo($specificity) <= 0;
                 }
 
                 if ($overrule) {
