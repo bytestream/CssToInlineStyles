@@ -216,7 +216,7 @@ class CssToInlineStyles
      */
     protected function convertToHtmlEntities($html)
     {
-        return mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        return mb_encode_numericentity($html, [0x80, 0xFFFF, 0, 0xFFFF], 'UTF-8');
     }
 
     /**
