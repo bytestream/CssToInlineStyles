@@ -267,6 +267,46 @@ EOF;
         $this->assertCorrectConversion($expected, $html, $css);
     }
 
+    public function testConversionAsciiRegular()
+    {
+        $html = '~';
+        $css = '';
+        $expected = "<p>{$html}</p>";
+        $this->assertCorrectConversion($expected, $html, $css);
+    }
+
+    public function testConversionAsciiDelete()
+    {
+        $html = "\u{007F}";
+        $css = '';
+        $expected = "<p>{$html}</p>";
+        $this->assertCorrectConversion($expected, $html, $css);
+    }
+
+    public function testConversionLowestCodepoint()
+    {
+        $html = "\u{0080}";
+        $css = '';
+        $expected = "<p>{$html}</p>";
+        $this->assertCorrectConversion($expected, $html, $css);
+    }
+
+    public function testConversionHighestCodepoint()
+    {
+        $html = "\u{10FFFF}";
+        $css = '';
+        $expected = "<p>{$html}</p>";
+        $this->assertCorrectConversion($expected, $html, $css);
+    }
+
+    public function testMB4character()
+    {
+        $html = '🇳🇱';
+        $css = '';
+        $expected = "<p>{$html}</p>";
+        $this->assertCorrectConversion($expected, $html, $css);
+    }
+
     public function testSetLibXmlOptions()
     {
         $dtd = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">';
