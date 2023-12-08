@@ -9,11 +9,11 @@ jobs:
     name: Check composer.json
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           coverage: none
-          php-version: '8.0'
+          php-version: '8.2'
       - run: composer validate --strict --no-check-lock
 
   tests:
@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Prepare git # see https://github.com/actions/checkout/issues/226#issue-606867805
         run: git config --global core.autocrlf false && git config --global core.eol lf
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php }}"
@@ -50,4 +50,3 @@ jobs:
       - name: Upload code coverage
         continue-on-error: true
         run: wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-
