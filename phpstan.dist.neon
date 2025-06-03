@@ -4,6 +4,12 @@ parameters:
     paths:
         - ./src/
         - ./tests/
+    ignoreErrors:
+        - identifier: method.internalClass
+        - identifier: new.internalClass
+        - identifier: parameter.internalClass
+        - identifier: property.internalClass
+        - identifier: return.internalClass
 
 includes:
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon

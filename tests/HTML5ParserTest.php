@@ -1,21 +1,18 @@
 <?php
 
-namespace TijsVerkoyen\CssToInlineStyles\tests;
+namespace TijsVerkoyen\CssToInlineStyles\Tests;
 
 use PHPUnit\Framework\TestCase;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 class HTML5ParserTest extends TestCase
 {
-    /**
-     * @var CssToInlineStyles
-     */
-    protected $cssToInlineStyles;
+    protected ?CssToInlineStyles $cssToInlineStyles = null;
 
     /**
      * @before
      */
-    protected function prepare()
+    protected function prepare(): void
     {
         $this->cssToInlineStyles = new CssToInlineStyles(true);
     }
@@ -23,13 +20,17 @@ class HTML5ParserTest extends TestCase
     /**
      * @after
      */
-    protected function clear()
+    protected function clear(): void
     {
         $this->cssToInlineStyles = null;
     }
 
-    public function testBasicHtml()
+    public function testBasicHtml(): void
     {
+        if ($this->cssToInlineStyles === null) {
+            $this->fail('The cssToInlineStyles has not been initialised.');
+        }
+
         $html = '<!doctype html><html><head><style>body{color:blue}</style></head><body><p>foo</p></body></html>';
         $css = 'p { color: red; }';
         $expected = <<<EOF
@@ -40,9 +41,12 @@ EOF;
         $this->assertEquals($expected, $this->cssToInlineStyles->convert($html, $css));
     }
 
-    public function testSwitchingParser()
+    public function testHtml4(): void
     {
-        // HTML4
+        if ($this->cssToInlineStyles === null) {
+            $this->fail('The cssToInlineStyles has not been initialised.');
+        }
+
         $html = '<html><head><style>body{color:blue}</style></head><body><p>foo</p></body></html>';
         $css = 'p { color: red; }';
         $expected = <<<EOF
@@ -54,9 +58,16 @@ EOF;
 EOF;
 
         $this->assertEquals($expected, $this->cssToInlineStyles->convert($html, $css));
+    }
 
-        // HTML5
-        $html = '<!doctype html>' . $html;
+    public function testHtml5(): void
+    {
+        if ($this->cssToInlineStyles === null) {
+            $this->fail('The cssToInlineStyles has not been initialised.');
+        }
+
+        $html = '<!doctype html><html><head><style>body{color:blue}</style></head><body><p>foo</p></body></html>';
+        $css = 'p { color: red; }';
         $expected = <<<EOF
 <!doctype html>
 <html><head><style>body{color:blue}</style></head><body style="color: blue;"><p style="color: red;">foo</p></body></html>

@@ -4,6 +4,7 @@ namespace TijsVerkoyen\CssToInlineStyles;
 
 use LogicException;
 use Masterminds\HTML5;
+use RuntimeException;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\CssSelector\Exception\ExceptionInterface;
@@ -163,6 +164,10 @@ class CssToInlineStyles
      */
     protected function parseHtml5($html)
     {
+        if ($this->html5Parser === null) {
+            throw new LogicException('HTML5 parser has not been initialised.');
+        }
+
         $this->isHtml5Document = true;
 
         return $this->html5Parser->parse($this->convertToHtmlEntities($html));
@@ -213,7 +218,7 @@ class CssToInlineStyles
 
     /**
      * @param string $html
-     * @return array|false|string
+     * @return string
      */
     protected function convertToHtmlEntities($html)
     {
@@ -235,27 +240,16 @@ class CssToInlineStyles
         // retrieve the document element
         // we do it this way to preserve the utf-8 encoding
         $htmlElement = $document->documentElement;
-
         if ($htmlElement === null) {
-            throw new \RuntimeException('Failed to get HTML from empty document.');
+            throw new RuntimeException('Failed to get HTML from empty document.');
         }
 
         $html = $parser->saveHTML($htmlElement) ?: '';
-
-        if ($html === false) {
-            throw new \RuntimeException('Failed to get HTML from document.');
-        }
         $html = trim($html);
-        if ($htmlElement === null) {
-            return $html;
-        }
 
         // retrieve the doctype
         $document->removeChild($htmlElement);
         $doctype = $document->saveHTML() ?: '';
-        if ($doctype === false) {
-            $doctype = '';
-        }
         $doctype = trim($doctype);
 
         // if it is the html5 doctype convert it to lowercase

@@ -265,7 +265,7 @@ EOF
         );
     }
 
-    public function testHtmlCommentsInStyle()
+    public function testHtmlCommentsInStyle(): void
     {
         $expected = 'p{color:blue}' . "\n";
         $this->assertEquals(

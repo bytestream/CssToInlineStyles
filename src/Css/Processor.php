@@ -44,7 +44,7 @@ class Processor
 
         /** @var DOMElement $style */
         foreach ($document->getElementsByTagName('style') as $style) {
-            $css .= $this->trimHtmlComments($style->nodeValue) . "\n";
+            $css .= $this->trimHtmlComments($style->nodeValue ?? '') . "\n";
         }
 
         return $css;

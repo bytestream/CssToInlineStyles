@@ -304,7 +304,7 @@ EOF;
         $this->assertCorrectConversion($expected, $html, $css);
     }
 
-    public function testSetLibXmlOptions()
+    public function testSetLibXmlOptions(): void
     {
         $dtd = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">';
         $expected = '<html><body><p></p></body></html>';
