@@ -76,16 +76,15 @@ class Processor
     private function doCleanup($css)
     {
         // remove charset
-        $css = (string) preg_replace('/@charset "[^"]++";/', '', $css);
+        $css = (string) preg_replace('/@charset "[^"]++";/', '', $css) ?? $css;
         // remove media queries
-        $css = (string) preg_replace('/@media [^{]*+{([^{}]++|{[^{}]*+})*+}/', '', $css);
+        $css = (string) preg_replace('/@media [^{]*+{([^{}]++|{[^{}]*+})*+}/', '', $css) ?? $css;
 
         $css = str_replace(array("\r", "\n"), '', $css);
         $css = str_replace(array("\t"), ' ', $css);
         $css = str_replace('"', '\'', $css);
-        $css = (string) preg_replace('|/\*.*?\*/|', '', $css);
-        $css = (string) preg_replace('/\s\s++/', ' ', $css);
-
+        $css = (string) preg_replace('|/\*.*?\*/|', '', $css) ?? $css;
+        $css = (string) preg_replace('/\s\s++/', ' ', $css) ?? $css;
         $css = trim($css);
 
         return $css;
