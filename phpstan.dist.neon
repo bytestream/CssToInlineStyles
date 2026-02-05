@@ -5,11 +5,23 @@ parameters:
         - ./src/
         - ./tests/
     ignoreErrors:
-        - identifier: method.internalClass
-        - identifier: new.internalClass
-        - identifier: parameter.internalClass
-        - identifier: property.internalClass
-        - identifier: return.internalClass
+        # We are using the internal class Specificity from symfony/css-selector
+        # TODO: refactor the code to avoid using internal API in a future major version.
+        -
+            identifier: method.internalClass
+            message: '#Symfony\\Component\\CssSelector\\Node\\Specificity#'
+        -
+            identifier: new.internalClass
+            message: '#Symfony\\Component\\CssSelector\\Node\\Specificity#'
+        -
+            identifier: return.internalClass
+            message: '#Symfony\\Component\\CssSelector\\Node\\Specificity#'
+        -
+            identifier: parameter.internalClass
+            message: '#Symfony\\Component\\CssSelector\\Node\\Specificity#'
+        -
+            identifier: property.internalClass
+            message: '#Symfony\\Component\\CssSelector\\Node\\Specificity#'
 
 includes:
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
